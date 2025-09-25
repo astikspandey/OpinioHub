@@ -2,8 +2,7 @@
 
 ![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)
 ![Status](https://img.shields.io/badge/status-prototype-orange.svg)
-![Update](https://img.shields.io/badge/major-update-success.svg)
-
+![Update](https://img.shields.io/badge/update%20type-Major-success.svg)
 ## 🚀 Major Update: Fonts System
 We’re excited to announce the release of **OpinioHub v0.1.0**, our first **major update**!  
 This update introduces a powerful new **Fonts** system to enhance customization and design.
