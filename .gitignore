@@ -1,0 +1,24 @@
+# Environments
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.log
+venv/
+
+# Database
+db.sqlite3
+
+# Media files (user uploaded)
+media/
+
+# Static files (collected)
+staticfiles/
+
+# IDE-specific files
+.vscode/
+.idea/
+
+extra/
+extra.zip

@@ -1,0 +1,12 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <h2>Delete Emoji</h2>
+    <p>Are you sure you want to delete the emoji "{{ emoji.name }}"?</p>
+    <img src="{{ emoji.image }}" alt="{{ emoji.name }}" style="max-width: 50px; max-height: 50px;">
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn-default btn-delete">Yes, delete</button>
+        <a href="{% url 'emoji_upload' %}" class="btn-default">Cancel</a>
+    </form>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="post">
+        {% if user.is_authenticated %}
+            <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}">Edit</a>
+            <a class="btn btn-default btn-delete" href="{% url 'post_delete' pk=post.pk %}">Delete</a>
+        {% endif %}
+        <h2>{{ post.title }}</h2>
+        <p>Posted by: {{ post.author.username }} on {{ post.created_at }}</p>
+        <div id="post-content">{{ post.content|safe }}</div>
+    </div>
+
+    {# Removed JavaScript for emoji/sticker replacement, as img tags are now saved directly from editor #}
+{% endblock %}
+
+{% block footer_links %}
+    {% if user.is_authenticated %}
+        <a href="{% url 'post_list' %}" class="btn-default">Home</a>
+        <a href="{% url 'post_new' %}" class="btn-default">New Post</a>
+        <a href="{% url 'emoji_upload' %}" class="btn-default">Upload Emoji</a>
+        <a href="{% url 'sticker_upload' %}" class="btn-default">Upload Sticker</a>
+        <a href="{% url 'font_upload' %}" class="btn-default">Upload Font</a>
+    {% endif %}
+{% endblock %}

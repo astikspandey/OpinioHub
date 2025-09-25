@@ -1,0 +1,68 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+    {% for post in posts %}
+        <div class="post">
+            <h2><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h2>
+            <p>Posted by: {{ post.author.username }} on {{ post.created_at }}</p>
+            <div class="post-content-{{ post.pk }}">{{ post.content|safe }}</div>
+        </div>
+    {% endfor %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let allEmojis = {};
+            let allStickers = {};
+
+            // Fetch all emoji and sticker data
+            fetch('/api/media/') // Assuming a new endpoint or existing one to get all media
+                .then(response => response.json())
+                .then(data => {
+                    data.emojis.forEach(emoji => {
+                        allEmojis[`:${emoji.name}:`] = emoji.image;
+                    });
+                    data.stickers.forEach(sticker => {
+                        allStickers[`%${sticker.name}%`] = sticker.image;
+                    });
+
+                    // Process each post's content
+                    {% for post in posts %}
+                        const postContent{{ post.pk }} = document.querySelector('.post-content-{{ post.pk }}');
+                        if (postContent{{ post.pk }}) {
+                            let contentHtml = postContent{{ post.pk }}.innerHTML;
+
+                            // Convert <img> tags back to text patterns
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = contentHtml;
+
+                            tempDiv.querySelectorAll('img[data-name]').forEach(img => {
+                                const emojiName = img.getAttribute('data-name');
+                                if (emojiName) {
+                                    const isEmoji = allEmojis[`:${emojiName}:`];
+                                    const isSticker = allStickers[`%${emojiName}%`];
+                                    if (isEmoji) {
+                                        img.outerHTML = `:${emojiName}:`;
+                                    } else if (isSticker) {
+                                        img.outerHTML = `%${emojiName}%`;
+                                    }
+                                }
+                            });
+                            postContent{{ post.pk }}.innerHTML = tempDiv.innerHTML;
+                        }
+                    {% endfor %}
+                })
+                .catch(error => console.error('Error fetching media data:', error));
+        });
+    </script>
+{% endblock %}
+
+{% block footer_links %}
+    {% if user.is_authenticated %}
+        <a href="{% url 'post_list' %}" class="btn-default">Home</a>
+        <a href="{% url 'post_new' %}" class="btn-default">New Post</a>
+        <a href="{% url 'emoji_upload' %}" class="btn-default">Upload Emoji</a>
+        <a href="{% url 'sticker_upload' %}" class="btn-default">Upload Sticker</a>
+        <a href="{% url 'font_upload' %}" class="btn-default">Upload Font</a>
+    {% endif %}
+{% endblock %}

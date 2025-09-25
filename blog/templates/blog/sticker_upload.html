@@ -1,0 +1,100 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <h2>Upload Sticker</h2>
+    <form method="POST" enctype="multipart/form-data" id="sticker-upload-form">
+        {% csrf_token %}
+        <p>{{ form.name.label_tag }} {{ form.name }}</p>
+        <p>
+            <label for="id_image_file">Sticker Image:</label>
+            <div id="paste-area" style="border: 2px dashed #ccc; padding: 20px; text-align: center; margin-bottom: 10px;">
+                Paste your sticker image here or click to browse.
+            </div>
+            {{ form.image_file }}
+            <img id="image-preview" src="#" alt="Image preview" style="max-width: 100px; max-height: 100px; display: none; margin-top: 10px;">
+        </p>
+        <button type="submit" class="btn-default">Upload</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const pasteArea = document.getElementById('paste-area');
+            const imageFileInput = document.getElementById('id_image_file');
+            const imagePreview = document.getElementById('image-preview');
+
+            pasteArea.addEventListener('paste', function(e) {
+                e.preventDefault();
+                const clipboardData = e.clipboardData || window.clipboardData;
+                const items = clipboardData.items;
+
+                for (let i = 0; i < items.length; i++) {
+                    if (items[i].type.indexOf('image') !== -1) {
+                        const file = items[i].getAsFile();
+                        if (file) {
+                            const dataTransfer = new DataTransfer();
+                            dataTransfer.items.add(file);
+                            imageFileInput.files = dataTransfer.files;
+
+                            const reader = new FileReader();
+                            reader.onload = function(event) {
+                                imagePreview.src = event.target.result;
+                                imagePreview.style.display = 'block';
+                                pasteArea.textContent = 'Image pasted!';
+                            };
+                            reader.readAsDataURL(file);
+                            break;
+                        }
+                    }
+                }
+            });
+
+            imageFileInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        imagePreview.src = event.target.result;
+                        imagePreview.style.display = 'block';
+                        pasteArea.textContent = 'Image selected!';
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                } else {
+                    imagePreview.style.display = 'none';
+                    imagePreview.src = '#';
+                    pasteArea.textContent = 'Paste your sticker image here or click to browse.';
+                }
+            });
+
+            pasteArea.addEventListener('click', function() {
+                imageFileInput.click();
+            });
+        });
+    </script>
+
+    <h3>Existing Stickers:</h3>
+    <div class="sticker-list">
+        {% for sticker in stickers %}
+            <div class="sticker-item" style="display: inline-block; margin: 5px; text-align: center;">
+                <img src="{{ sticker.image }}" alt="{{ sticker.name }}" style="width: 30px; height: 30px;"><br>
+                <span>%{{ sticker.name }}%</span>
+                {% if user.is_superuser %}
+                    <form action="{% url 'sticker_delete' pk=sticker.pk %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-default btn-delete" style="font-size: 0.7em; padding: 3px 6px;">Delete</button>
+                    </form>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p>No stickers uploaded yet.</p>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block footer_links %}
+    {% if user.is_authenticated %}
+        <a href="{% url 'post_list' %}" class="btn-default">Home</a>
+        <a href="{% url 'post_new' %}" class="btn-default">New Post</a>
+        <a href="{% url 'emoji_upload' %}" class="btn-default">Upload Emoji</a>
+        <a href="{% url 'sticker_upload' %}" class="btn-default">Upload Sticker</a>
+        <a href="{% url 'font_upload' %}" class="btn-default">Upload Font</a>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,140 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Opiniohub</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Preload fonts for faster loading -->
+    <link rel="preload" href="{% static 'blog/fonts/AftaSansThin-Regular.otf' %}" as="font" type="font/otf" crossorigin>
+    <link rel="preload" href="{% static 'blog/fonts/AftaSansThin-Italic.otf' %}" as="font" type="font/otf" crossorigin>
+
+    <!-- Font CSS (loaded first to prevent FOUC) -->
+    <style>
+        @font-face {
+            font-family: "AftaSans";
+            src: url("{% static 'blog/fonts/AftaSansThin-Regular.otf' %}") format("opentype");
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: "AftaSans";
+            src: url("{% static 'blog/fonts/AftaSansThin-Italic.otf' %}") format("opentype");
+            font-weight: normal;
+            font-style: italic;
+            font-display: swap;
+        }
+
+        /* Ensure fonts are applied immediately */
+        .aftasans-font {
+            font-family: "AftaSans", sans-serif !important;
+        }
+    </style>
+
+    <!-- Main stylesheets -->
+    <link rel="stylesheet" href="{% static 'blog/css/blog.css' %}?v={{ timestamp }}">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+    <!-- Dynamic fonts CSS for editor -->
+    <link href="{% url 'dynamic_fonts_css' %}?v={{ timestamp }}" rel="stylesheet" type="text/css" id="dynamic-fonts">
+</head>
+<body>
+    <div class="page-header">
+        {% if user.is_authenticated %}
+            <p>Hello, {{ user.username }}
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-default">Log out</button>
+                </form>
+            </p>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn-default">Log in</a>
+            <a href="{% url 'signup' %}" class="btn-default">Sign up</a>
+        {% endif %}
+        <button id="hard-refresh-button" class="btn-default" style="margin-left: 10px;" onclick="forceReloadFonts()">Hard Refresh</button>
+        <h1 class="aftasans-font"><a href="/">Opiniohub</a></h1>
+    </div>
+    <div class="content container">
+        <div class="row">
+            <div class="col-md-8">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+    <div class="footer-links">
+        {% block footer_links %}
+        {% endblock %}
+    </div>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script>
+        // Simple and reliable font refresh function
+        function forceReloadFonts() {
+            console.log('Forcing font reload...');
+
+            // Clear all font caches
+            if ('caches' in window) {
+                caches.keys().then(names => {
+                    names.forEach(name => {
+                        caches.delete(name);
+                    });
+                });
+            }
+
+            // Add timestamp to all stylesheets
+            const timestamp = new Date().getTime();
+            const links = document.querySelectorAll('link[rel="stylesheet"]');
+            links.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href) {
+                    const newHref = href.split('?')[0] + '?v=' + timestamp;
+                    link.setAttribute('href', newHref);
+                }
+            });
+
+            // Specifically reload dynamic fonts
+            const dynamicLink = document.getElementById('dynamic-fonts');
+            if (dynamicLink) {
+                const newHref = dynamicLink.href.split('?')[0] + '?v=' + timestamp;
+                dynamicLink.href = newHref;
+            }
+
+            // Force browser to re-render fonts
+            setTimeout(() => {
+                document.body.style.display = 'none';
+                document.body.offsetHeight; // Trigger reflow
+                document.body.style.display = '';
+                console.log('Font reload complete!');
+            }, 100);
+
+            // Full page reload after font refresh
+            setTimeout(() => {
+                window.location.reload(true);
+            }, 200);
+        }
+
+        // Initialize font loading check
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Checking font loading...');
+
+            // Check if AftaSans font is loaded
+            if (document.fonts && document.fonts.check) {
+                const fontLoaded = document.fonts.check('12px AftaSans');
+                if (!fontLoaded) {
+                    console.warn('AftaSans font not loaded, attempting to load...');
+                    document.fonts.load('12px AftaSans').then(() => {
+                        console.log('AftaSans font loaded successfully!');
+                    }).catch(err => {
+                        console.error('Failed to load AftaSans font:', err);
+                    });
+                } else {
+                    console.log('AftaSans font is ready!');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

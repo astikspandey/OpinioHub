@@ -1,0 +1,148 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <h2>Font Management</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Upload New Font</h3>
+            <form method="post" enctype="multipart/form-data" class="post-form">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="id_name">{{ form.name.label }}:</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                        <div class="text-danger">
+                            {{ form.name.errors }}
+                        </div>
+                    {% endif %}
+                    <small class="form-text text-muted">Font identifier (lowercase, no spaces, used in CSS)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_display_name">{{ form.display_name.label }}:</label>
+                    {{ form.display_name }}
+                    {% if form.display_name.errors %}
+                        <div class="text-danger">
+                            {{ form.display_name.errors }}
+                        </div>
+                    {% endif %}
+                    <small class="form-text text-muted">Human-readable font name</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_font_weight">{{ form.font_weight.label }}:</label>
+                    {{ form.font_weight }}
+                    {% if form.font_weight.errors %}
+                        <div class="text-danger">
+                            {{ form.font_weight.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_font_style">{{ form.font_style.label }}:</label>
+                    {{ form.font_style }}
+                    {% if form.font_style.errors %}
+                        <div class="text-danger">
+                            {{ form.font_style.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_font_file">{{ form.font_file.label }}:</label>
+                    {{ form.font_file }}
+                    {% if form.font_file.errors %}
+                        <div class="text-danger">
+                            {{ form.font_file.errors }}
+                        </div>
+                    {% endif %}
+                    <small class="form-text text-muted">{{ form.font_file.help_text }}</small>
+                </div>
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <button type="submit" class="btn-default">Upload Font</button>
+            </form>
+        </div>
+
+        <div class="col-md-6">
+            <h3>Uploaded Fonts ({{ fonts.count }})</h3>
+            {% if fonts %}
+                <div class="font-list">
+                    {% for font in fonts %}
+                        <div class="font-item" style="border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px;">
+                            <h4 style="font-family: '{{ font.display_name }}', sans-serif; margin: 0 0 10px 0;">{{ font.display_name }}</h4>
+                            <div class="font-details" style="font-size: 12px; color: #666;">
+                                <strong>Name:</strong> {{ font.name }}<br>
+                                <strong>Weight:</strong> {{ font.font_weight }}<br>
+                                <strong>Style:</strong> {{ font.font_style }}<br>
+                                <strong>Format:</strong> {{ font.font_format }}<br>
+                                <strong>Uploaded:</strong> {{ font.created_at|date:"M j, Y" }}
+                            </div>
+                            <div class="font-preview" style="margin: 10px 0; padding: 10px; background: #f9f9f9; border-radius: 3px;">
+                                <p style="font-family: '{{ font.display_name }}', sans-serif; margin: 0; font-size: 16px;">
+                                    The quick brown fox jumps over the lazy dog
+                                </p>
+                                <p style="font-family: '{{ font.display_name }}', sans-serif; margin: 5px 0 0 0; font-size: 14px;">
+                                    ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789
+                                </p>
+                            </div>
+                            {% if user.is_superuser %}
+                                <a href="{% url 'font_delete' font.pk %}" class="btn-delete" onclick="return confirm('Are you sure you want to delete this font?')">Delete</a>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No fonts uploaded yet.</p>
+            {% endif %}
+
+            <div class="built-in-fonts" style="margin-top: 30px;">
+                <h4>Built-in Fonts</h4>
+                <div class="font-item" style="border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px;">
+                    <h4 style="font-family: 'AftaSans', sans-serif; margin: 0 0 10px 0;">AftaSans (Built-in)</h4>
+                    <div class="font-details" style="font-size: 12px; color: #666;">
+                        <strong>Name:</strong> aftasans<br>
+                        <strong>Styles:</strong> Regular, Italic<br>
+                        <strong>Format:</strong> OpenType<br>
+                    </div>
+                    <div class="font-preview" style="margin: 10px 0; padding: 10px; background: #f9f9f9; border-radius: 3px;">
+                        <p style="font-family: 'AftaSans', sans-serif; margin: 0; font-size: 16px;">
+                            The quick brown fox jumps over the lazy dog
+                        </p>
+                        <p style="font-family: 'AftaSans', sans-serif; margin: 5px 0 0 0; font-size: 14px; font-style: italic;">
+                            The quick brown fox jumps over the lazy dog (Italic)
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="usage-info" style="margin-top: 30px; padding: 20px; background: #e8f4f8; border-radius: 5px;">
+        <h4>How to Use Uploaded Fonts</h4>
+        <ol>
+            <li>Upload your font file using the form above</li>
+            <li>The font will automatically be available in the post editor's font dropdown</li>
+            <li>You can also use the font in your blog's CSS by referencing the font's display name</li>
+            <li>Click the "Hard Refresh" button to reload fonts if they don't appear immediately</li>
+        </ol>
+        <p><strong>Supported formats:</strong> TTF, OTF, WOFF, WOFF2</p>
+    </div>
+{% endblock %}
+
+{% block footer_links %}
+    {% if user.is_authenticated %}
+        <a href="{% url 'post_list' %}" class="btn-default">Home</a>
+        <a href="{% url 'post_new' %}" class="btn-default">New Post</a>
+        <a href="{% url 'emoji_upload' %}" class="btn-default">Upload Emoji</a>
+        <a href="{% url 'sticker_upload' %}" class="btn-default">Upload Sticker</a>
+        <a href="{% url 'font_upload' %}" class="btn-default">Upload Font</a>
+    {% endif %}
+{% endblock %}

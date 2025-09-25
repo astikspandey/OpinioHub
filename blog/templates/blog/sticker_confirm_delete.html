@@ -1,0 +1,12 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <h2>Delete Sticker</h2>
+    <p>Are you sure you want to delete the sticker "{{ sticker.name }}"?</p>
+    <img src="{{ sticker.image }}" alt="{{ sticker.name }}" style="max-width: 50px; max-height: 50px;">
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn-default btn-delete">Yes, delete</button>
+        <a href="{% url 'sticker_upload' %}" class="btn-default">Cancel</a>
+    </form>
+{% endblock %}

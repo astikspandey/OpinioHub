@@ -1,0 +1,304 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <h2>New post</h2>
+    <form method="POST" class="post-form" id="post-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_title">Title:</label>
+            {{ form.title }}
+        </div>
+        <div class="form-group">
+            <label for="id_content">Content:</label>
+            <div id="custom-toolbar">
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-blockquote"></button>
+                    <button class="ql-code-block"></button>
+                </span>
+                <span class="ql-formats">
+                    <select class="ql-header">
+                        <option value="1"></option>
+                        <option value="2"></option>
+                        <option value="false"></option> <!-- Corrected: default for normal text -->
+                    </select>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-list" value="ordered"></button>
+                    <button class="ql-list" value="bullet"></button>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-script" value="sub"></button>
+                    <button class="ql-script" value="super"></button>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-indent" value="-1"></button>
+                    <button class="ql-indent" value="+1"></button>
+                </span>
+                <span class="ql-formats">
+                    <select class="ql-size">
+                        <option value="small"></option>
+                        <option value="false"></option>
+                        <option value="large"></option>
+                        <option value="huge"></option>
+                    </select>
+                </span>
+                <span class="ql-formats">
+                    <select class="ql-header">
+                        <option value="1"></option>
+                        <option value="2"></option>
+                        <option value="3"></option>
+                        <option value="4"></option>
+                        <option value="5"></option>
+                        <option value="6"></option>
+                        <option value="false"></option> <!-- Corrected: default for normal text -->
+                    </select>
+                </span>
+                <span class="ql-formats">
+                    <select class="ql-color"></select>
+                    <select class="ql-background"></select>
+                </span>
+                <span class="ql-formats">
+                    <select class="ql-font"></select>
+                </span>
+                <span class="ql-formats">
+                    <select class="ql-align"></select>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-clean"></button>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-emoji"></button>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-sticker"></button>
+                </span>
+                <span class="ql-formats">
+                    <button id="load-fonts-button" class="btn-default">Load Fonts</button>
+                </span>
+            </div>
+            <div id="editor"></div>
+            <textarea name="content" id="id_content" style="display:none;"></textarea>
+        </div>
+        <button type="submit" class="save btn btn-default">Save</button>
+    </form>
+
+    <div id="emoji-picker" style="display: none; border: 1px solid #ccc; padding: 10px; background-color: white; position: absolute; z-index: 1000;">
+        {% for emoji in emojis %}
+            <img src="{{ emoji.image }}" alt=":{{ emoji.name }}:" data-emoji-name=":{{ emoji.name }}:" class="editor-emoji" style="width: 24px; height: 24px; cursor: pointer; margin: 2px;">
+        {% endfor %}
+    </div>
+
+    <div id="sticker-picker" style="display: none; border: 1px solid #ccc; padding: 10px; background-color: white; position: absolute; z-index: 1000;">
+        {% for sticker in stickers %}
+            <img src="{{ sticker.image }}" alt="%{{ sticker.name }}%" data-sticker-name="%{{ sticker.name }}%" class="editor-sticker" style="width: 30px; height: 30px; cursor: pointer; margin: 2px;">
+        {% endfor %}
+    </div>
+
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Define a custom Blot for Emojis
+            const Embed = Quill.import('blots/embed');
+
+            class CustomEmojiBlot extends Embed {
+                static blotName = 'custom-emoji';
+                static tagName = 'img';
+
+                static create(value) {
+                    const node = super.create();
+                    node.setAttribute('src', value.src);
+                    node.setAttribute('alt', value.alt || ''); // Ensure alt is set
+                    node.setAttribute('data-name', value.name);
+                    node.setAttribute('style', 'width: 24px; height: 24px; vertical-align: middle;');
+                    return node;
+                }
+
+                static value(node) {
+                    return {
+                        src: node.getAttribute('src'),
+                        alt: node.getAttribute('alt'),
+                        name: node.getAttribute('data-name'),
+                    };
+                }
+            }
+            Quill.register('blots/custom-emoji', CustomEmojiBlot, true);
+
+            let allEmojis = {};
+            let allStickers = {};
+            var quill; // Declare quill here
+
+            fetch('{% url "get_media_json" %}')
+                .then(response => response.json())
+                .then(data => {
+                    data.emojis.forEach(emoji => {
+                        allEmojis[`:${emoji.name}:`] = emoji.image;
+                    });
+                    data.stickers.forEach(sticker => {
+                        allStickers[`%${sticker.name}%`] = sticker.image;
+                    });
+                    console.log('Loaded Emojis:', allEmojis);
+                    console.log('Loaded Stickers:', allStickers);
+                    console.log('Media data loaded. Ready for emoji/sticker replacement.');
+                })
+                .catch(error => console.error('Error loading media JSON:', error));
+
+            // Configure fonts for Quill editor
+            const Font = Quill.import('formats/font');
+            const availableFonts = ['aftasans'];
+            Font.whitelist = availableFonts;
+            Quill.register(Font, true);
+
+            // Populate font dropdown
+            const fontSelect = document.querySelector('#custom-toolbar .ql-font');
+            if (fontSelect) {
+                fontSelect.innerHTML = '';
+
+                // Add default option
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = 'Default Font';
+                fontSelect.appendChild(defaultOption);
+
+                // Add AftaSans option
+                const aftasansOption = document.createElement('option');
+                aftasansOption.value = 'aftasans';
+                aftasansOption.textContent = 'AftaSans';
+                fontSelect.appendChild(aftasansOption);
+
+                console.log('Font dropdown populated with AftaSans');
+            }
+
+            // Initialize Quill with font support
+            quill = new Quill('#editor', {
+                theme: 'snow',
+                modules: {
+                    toolbar: '#custom-toolbar'
+                },
+                formats: ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block', 'header', 'list', 'script', 'indent', 'size', 'color', 'background', 'font', 'align', 'clean', 'custom-emoji']
+            });
+
+            // Set existing content after Quill is initialized
+            var existingContent = `{{ form.instance.content|safe }}`;
+            if (existingContent && existingContent.trim() !== 'None') {
+                quill.clipboard.dangerouslyPasteHTML(existingContent);
+            }
+
+            // Form submission handler
+            document.getElementById('post-form').onsubmit = function() {
+                let contentToSave = quill.root.innerHTML;
+                console.log('Content to save (Quill raw HTML):', contentToSave);
+                document.getElementById('id_content').value = contentToSave;
+            };
+
+            // Text change handler for emoji/sticker conversion
+            quill.on('text-change', function(delta, oldDelta, source) {
+                if (source === 'user') {
+                    console.log('Quill content on text change:', quill.root.innerHTML);
+                    // Existing emoji/sticker text pattern to image conversion logic can go here
+                }
+            });
+
+            // Remove load fonts button if it exists (no longer needed)
+            const loadFontsButton = document.getElementById('load-fonts-button');
+            if (loadFontsButton) {
+                loadFontsButton.remove();
+            }
+
+            console.log('Editor initialized with AftaSans font support');
+
+
+            const emojiButton = document.querySelector('#custom-toolbar .ql-emoji');
+            const emojiPicker = document.getElementById('emoji-picker');
+
+            if (emojiButton) {
+                emojiButton.innerHTML = '&#128512;';
+                emojiButton.title = 'Insert Emoji';
+                emojiButton.addEventListener('click', function() {
+                    emojiPicker.style.display = (emojiPicker.style.display === 'none' || emojiPicker.style.display === '') ? 'block' : 'none';
+                    const stickerPicker = document.getElementById('sticker-picker');
+                    if (stickerPicker) stickerPicker.style.display = 'none';
+                    const rect = emojiButton.getBoundingClientRect();
+                    emojiPicker.style.top = `${rect.bottom + window.scrollY}px`;
+                    emojiPicker.style.left = `${rect.left + window.scrollX}px`;
+                });
+            }
+
+            const stickerButton = document.querySelector('#custom-toolbar .ql-sticker');
+            const stickerPicker = document.getElementById('sticker-picker');
+
+            if (stickerButton) {
+                stickerButton.innerHTML = '&#127871;';
+                stickerButton.title = 'Insert Sticker';
+                stickerButton.addEventListener('click', function() {
+                    stickerPicker.style.display = (stickerPicker.style.display === 'none' || stickerPicker.style.display === '') ? 'block' : 'none';
+                    const emojiPicker = document.getElementById('emoji-picker');
+                    if (emojiPicker) emojiPicker.style.display = 'none';
+                    const rect = stickerButton.getBoundingClientRect();
+                    stickerPicker.style.top = `${rect.bottom + window.scrollY}px`;
+                    stickerPicker.style.left = `${rect.left + window.scrollX}px`;
+                });
+            }
+
+            document.querySelectorAll('.editor-emoji').forEach(emojiImg => {
+                emojiImg.addEventListener('click', function() {
+                    const emojiText = this.getAttribute('data-emoji-name');
+                    const emojiSrc = this.getAttribute('src');
+                    const emojiAlt = this.getAttribute('alt');
+                    const range = quill.getSelection(true);
+                    if (range) {
+                        quill.deleteText(range.index, range.length, 'silent');
+                        quill.insertEmbed(range.index, 'custom-emoji', { src: emojiSrc, alt: emojiAlt, 'data-name': emojiText.replace(/:/g, '') }, 'silent'); // Insert image directly
+                        quill.setSelection(range.index + 1, 0, 'silent'); // Adjust selection past the inserted image
+                    }
+                    document.getElementById('emoji-picker').style.display = 'none';
+                });
+            });
+
+            document.querySelectorAll('.editor-sticker').forEach(stickerImg => {
+                stickerImg.addEventListener('click', function() {
+                    const stickerText = this.getAttribute('data-sticker-name');
+                    const stickerSrc = this.getAttribute('src');
+                    const stickerAlt = this.getAttribute('alt');
+                    const range = quill.getSelection(true);
+                    if (range) {
+                        quill.deleteText(range.index, range.length, 'silent');
+                        quill.insertEmbed(range.index, 'custom-emoji', { src: stickerSrc, alt: stickerAlt, 'data-name': stickerText.replace(/%/g, '') }, 'silent'); // Insert image directly
+                        quill.setSelection(range.index + 1, 0, 'silent'); // Adjust selection past the inserted image
+                    }
+                    document.getElementById('sticker-picker').style.display = 'none';
+                });
+            });
+
+            document.addEventListener('click', function(event) {
+                const emojiPicker = document.getElementById('emoji-picker');
+                const stickerPicker = document.getElementById('sticker-picker');
+                const emojiButton = document.querySelector('#custom-toolbar .ql-emoji');
+                const stickerButton = document.querySelector('#custom-toolbar .ql-sticker');
+                const fontSelect = document.querySelector('#custom-toolbar .ql-font');
+
+                if (!emojiPicker.contains(event.target) && (!emojiButton || !emojiButton.contains(event.target)) &&
+                    !stickerPicker.contains(event.target) && (!stickerButton || !stickerButton.contains(event.target)) &&
+                    !fontSelect.contains(event.target)) {
+                    emojiPicker.style.display = 'none';
+                    stickerPicker.style.display = 'none';
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block footer_links %}
+    {% if user.is_authenticated %}
+        <a href="{% url 'post_list' %}" class="btn-default">Home</a>
+        <a href="{% url 'post_new' %}" class="btn-default">New Post</a>
+        <a href="{% url 'emoji_upload' %}" class="btn-default">Upload Emoji</a>
+        <a href="{% url 'sticker_upload' %}" class="btn-default">Upload Sticker</a>
+        <a href="{% url 'font_upload' %}" class="btn-default">Upload Font</a>
+    {% endif %}
+{% endblock %}

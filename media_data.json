@@ -1,0 +1,354 @@
+{
+    "emojis": [
+        {
+            "name": "confetti",
+            "image_url": "https://i.ibb.co/Jwpkc93L/image.jpg"
+        },
+        {
+            "name": "veryhappy",
+            "image_url": "https://i.ibb.co/d4N62LPx/image.png"
+        },
+        {
+            "name": "nervoushappy",
+            "image_url": "https://i.ibb.co/jvpKS6W2/image.png"
+        },
+        {
+            "name": "happy",
+            "image_url": "https://i.ibb.co/YFGxRWDH/image.png"
+        },
+        {
+            "name": "smile",
+            "image_url": "https://i.ibb.co/LdKXgJtT/image.png"
+        },
+        {
+            "name": "closedeyessmile",
+            "image_url": "https://i.ibb.co/CK1vxssm/image.png"
+        },
+        {
+            "name": "rofl",
+            "image_url": "https://i.ibb.co/6JnKpJJJ/image.png"
+        },
+        {
+            "name": "tearsofjoy",
+            "image_url": "https://i.ibb.co/RdhdnBC/image.png"
+        },
+        {
+            "name": "grinningsquint",
+            "image_url": "https://i.ibb.co/tPMQw9Mt/image.png"
+        },
+        {
+            "name": "upsidedownsmile",
+            "image_url": "https://i.ibb.co/HD2gR9Ls/image.png"
+        },
+        {
+            "name": "melting",
+            "image_url": "https://i.ibb.co/qLCJQ1X4/image.png"
+        },
+        {
+            "name": "winking",
+            "image_url": "https://i.ibb.co/Q0DmWmT/image.png"
+        },
+        {
+            "name": "happyblush",
+            "image_url": "https://i.ibb.co/5WSGf13W/image.png"
+        },
+        {
+            "name": "angel",
+            "image_url": "https://i.ibb.co/7tv48TPL/image.png"
+        },
+        {
+            "name": "lotsoflove",
+            "image_url": "https://i.ibb.co/nqq8LR4v/image.png"
+        },
+        {
+            "name": "hearteyes",
+            "image_url": "https://i.ibb.co/sJycbBb4/image.png"
+        },
+        {
+            "name": "starstruck",
+            "image_url": "https://i.ibb.co/gFH3Rgkd/image.png"
+        },
+        {
+            "name": "blowingkiss",
+            "image_url": "https://i.ibb.co/C3GN23JY/image.png"
+        },
+        {
+            "name": "blush",
+            "image_url": "https://i.ibb.co/Q3j6PgZS/image.png"
+        },
+        {
+            "name": "blushingkiss",
+            "image_url": "https://i.ibb.co/nqmsS7YV/image.png"
+        },
+        {
+            "name": "kiss",
+            "image_url": "https://i.ibb.co/VY8hDN5j/image.png"
+        },
+        {
+            "name": "tasty",
+            "image_url": "https://i.ibb.co/MyjzdDNx/image.png"
+        },
+        {
+            "name": "toungesmile",
+            "image_url": "https://i.ibb.co/RZxbsXc/image.png"
+        },
+        {
+            "name": "winkingtongue",
+            "image_url": "https://i.ibb.co/bM76WQBf/image.png"
+        },
+        {
+            "name": "crazy",
+            "image_url": "https://i.ibb.co/KcJ0dqQq/image.png"
+        },
+        {
+            "name": "squintingtongue",
+            "image_url": "https://i.ibb.co/21FdN1jp/image.png"
+        },
+        {
+            "name": "moneyface",
+            "image_url": "https://i.ibb.co/TBLBm8Zt/image.png"
+        },
+        {
+            "name": "hug",
+            "image_url": "https://i.ibb.co/8gW0DQXn/image.png"
+        },
+        {
+            "name": "chuckle",
+            "image_url": "https://i.ibb.co/fVr8JJFV/image.png"
+        },
+        {
+            "name": "gasp",
+            "image_url": "https://i.ibb.co/DgjsNGj9/image.png"
+        },
+        {
+            "name": "peeking",
+            "image_url": "https://i.ibb.co/gZSnPn1s/image.png"
+        },
+        {
+            "name": "shush",
+            "image_url": "https://i.ibb.co/Lzb0Bdmm/image.png"
+        },
+        {
+            "name": "thinking",
+            "image_url": "https://i.ibb.co/LzLh0svx/image.png"
+        },
+        {
+            "name": "salute",
+            "image_url": "https://i.ibb.co/bxTKKBY/image.png"
+        },
+        {
+            "name": "zipmouth",
+            "image_url": "https://i.ibb.co/sJknjDwM/image.png"
+        },
+        {
+            "name": "raisedeyebrow",
+            "image_url": "https://i.ibb.co/8DFtgYzb/image.png"
+        },
+        {
+            "name": "neutral",
+            "image_url": "https://i.ibb.co/RTW2xZQS/image.png"
+        },
+        {
+            "name": "expressionless",
+            "image_url": "https://i.ibb.co/G3ss1xxB/image.png"
+        },
+        {
+            "name": "nomouth",
+            "image_url": "https://i.ibb.co/JR79BZk3/image.png"
+        },
+        {
+            "name": "dottedlines",
+            "image_url": "https://i.ibb.co/0pyb1vrd/image.png"
+        },
+        {
+            "name": "cloudsface",
+            "image_url": "https://i.ibb.co/Q36D6Wks/image.png"
+        },
+        {
+            "name": "smirk",
+            "image_url": "https://i.ibb.co/MrfpzN8/image.png"
+        },
+        {
+            "name": "unamused",
+            "image_url": "https://i.ibb.co/x8PHZwNG/image.png"
+        },
+        {
+            "name": "rollingeyes",
+            "image_url": "https://i.ibb.co/Nn2sFtKk/image.png"
+        },
+        {
+            "name": "eesh",
+            "image_url": "https://i.ibb.co/gF6m2nxy/image.png"
+        },
+        {
+            "name": "exhaling",
+            "image_url": "https://i.ibb.co/b559NbNC/image.png"
+        },
+        {
+            "name": "lying",
+            "image_url": "https://i.ibb.co/NgJrKBfh/image.png"
+        },
+        {
+            "name": "shakinghead",
+            "image_url": "https://i.ibb.co/39zKJbpJ/image.png"
+        },
+        {
+            "name": "nodding",
+            "image_url": "https://i.ibb.co/wFFPLpp5/image.png"
+        },
+        {
+            "name": "relieved",
+            "image_url": "https://i.ibb.co/fGQnzpm9/image.png"
+        },
+        {
+            "name": "pensive",
+            "image_url": "https://i.ibb.co/21Zc45xD/image.png"
+        },
+        {
+            "name": "snoring",
+            "image_url": "https://i.ibb.co/qMJ1RjTP/image.png"
+        },
+        {
+            "name": "drooling",
+            "image_url": "https://i.ibb.co/wZzhVb0c/image.png"
+        },
+        {
+            "name": "sleeping",
+            "image_url": "https://i.ibb.co/xSY4Dhh6/image.png"
+        },
+        {
+            "name": "medicalmask",
+            "image_url": "https://i.ibb.co/4nBCSr69/image.png"
+        },
+        {
+            "name": "facewiththermometer",
+            "image_url": "https://i.ibb.co/kstcR4Ng/image.png"
+        },
+        {
+            "name": "nauseated",
+            "image_url": "https://i.ibb.co/1GYVXXmf/image.png"
+        },
+        {
+            "name": "veryangry",
+            "image_url": "https://i.ibb.co/Cs254kbL/image.png"
+        }
+    ],
+    "stickers": [
+        {
+            "name": "freezingbruh",
+            "image_url": "https://i.ibb.co/S73f9j7k/image.png"
+        },
+        {
+            "name": "closedeesh",
+            "image_url": "https://i.ibb.co/j9tDZ7zj/image.png"
+        },
+        {
+            "name": "literallysadeyes",
+            "image_url": "https://i.ibb.co/rRcLZKXR/image.png"
+        },
+        {
+            "name": "sadhug",
+            "image_url": "https://i.ibb.co/RpSGntnp/image.png"
+        },
+        {
+            "name": "harshtruth",
+            "image_url": "https://i.ibb.co/Q7hdMnbV/image.png"
+        },
+        {
+            "name": "verysad",
+            "image_url": "https://i.ibb.co/hJkMH82K/image.png"
+        },
+        {
+            "name": "scratchinghead",
+            "image_url": "https://i.ibb.co/pvBpXK7X/image.png"
+        },
+        {
+            "name": "dontcarethinking",
+            "image_url": "https://i.ibb.co/3m4vCkLd/image.png"
+        },
+        {
+            "name": "deeeeepthinking",
+            "image_url": "https://i.ibb.co/R4s80pFx/image.png"
+        },
+        {
+            "name": "raisingeyebrow",
+            "image_url": "https://i.ibb.co/V0n3m7PB/image.png"
+        },
+        {
+            "name": "monoclesuspicious",
+            "image_url": "https://i.ibb.co/gF9s7hn0/image.png"
+        },
+        {
+            "name": "nomouthquiet",
+            "image_url": "https://i.ibb.co/ZznkBn63/image.png"
+        },
+        {
+            "name": "fingerquiet",
+            "image_url": "https://i.ibb.co/8Z41P50/image.png"
+        },
+        {
+            "name": "cursedzipper",
+            "image_url": "https://i.ibb.co/Z6rDN77p/image.png"
+        },
+        {
+            "name": "shockedblushing",
+            "image_url": "https://i.ibb.co/fzFPj3kY/image.png"
+        },
+        {
+            "name": "happyheadphones",
+            "image_url": "https://i.ibb.co/dnG5Wr7/image.png"
+        },
+        {
+            "name": ":O",
+            "image_url": "https://i.ibb.co/Kx3m1n0W/image.png"
+        },
+        {
+            "name": "nomouth",
+            "image_url": "https://i.ibb.co/VWgk4zYq/image.png"
+        },
+        {
+            "name": "whistle",
+            "image_url": "https://i.ibb.co/p6wt3M9C/image.png"
+        },
+        {
+            "name": "grossblush",
+            "image_url": "https://i.ibb.co/7xbqrkMs/image.png"
+        },
+        {
+            "name": "sadvomit",
+            "image_url": "https://i.ibb.co/HfzcQCfj/image.png"
+        },
+        {
+            "name": "extremlyangry",
+            "image_url": "https://i.ibb.co/d0ZBB8w4/image.png"
+        },
+        {
+            "name": "pantingblushing",
+            "image_url": "https://i.ibb.co/PZrM3c1m/image.png"
+        },
+        {
+            "name": "awwww",
+            "image_url": "https://i.ibb.co/d0MjD8w7/image.png"
+        },
+        {
+            "name": "blowingkiss",
+            "image_url": "https://i.ibb.co/LXb4RFCf/image.png"
+        },
+        {
+            "name": "hearteyesdrooling",
+            "image_url": "https://i.ibb.co/rR0rgHsx/image.png"
+        },
+        {
+            "name": "pleasegivelove",
+            "image_url": "https://i.ibb.co/5gxsnM4F/image.png"
+        },
+        {
+            "name": ":P",
+            "image_url": "https://i.ibb.co/zh3pJ7DW/image.png"
+        },
+        {
+            "name": "blowingraspberry",
+            "image_url": "https://i.ibb.co/TDw8N6qx/image.png"
+        }
+    ]
+}
